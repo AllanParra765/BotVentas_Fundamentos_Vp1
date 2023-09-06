@@ -2,7 +2,7 @@
 
 while true
 do
-  node /Bot_Venta/apirest/appRest.js # Reemplaza con la ruta de tu server
+  node /Bot_Ventasvp/apirest/appRest.js # Reemplaza con la ruta de tu server
   echo "Server crashed. Restarting..."
   sleep 1
 done

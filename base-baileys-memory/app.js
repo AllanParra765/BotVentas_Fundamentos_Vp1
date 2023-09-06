@@ -86,7 +86,7 @@ const flowCompra = addKeyword(["1"]).addAnswer(
     "👉 *Profecional* $1,1500.00 MX",
     "👉 *Empresarial* $1,490.00 MX\n",
     "Acontinuación realiza tu pago aquí",
-    "👉 https://link.mercadopago.com.mx/softprisemx",
+    "👉 https://bot-whatsapp.netlify.app/",
     "\n*Proceso de pago:* 👉  ingresa el monto, elige el medio de pago ¡y listo!",
     "\n*Proceso de entrega:* 👉 👉 Elige entre dos propuestas que te proporcionamos o crea una nueva combinando ambas. ¡Tu tarjeta estará lista con tus detalles en solo unas horas!",
     "\n*Recibirás:* 👉 Un enlace web y un archivo PDF de tu tarjeta digital.",
@@ -122,7 +122,7 @@ const flowCompra = addKeyword(["1"]).addAnswer(
      //nuevoPost.tarjeta= `${Diseno[ctx.body - 1]}`;
    // console.error("nueva PAGOtarjeta: ", nuevoPost.Pago);
     console.log("clienteData PAGOtarjeta: ", ctx);
-    const mobile = "5214772301019"
+    const mobile = "5714772301019"
     const message = `El Número: ${ctx.from} acaba de adquirir el\n Diseño: ${clienteData.tarjeta} \nSu Nombre es: ${nombre} \nEl Comprovante: *Se encuentra Arriba*`;/////flujo de envio de mensajes de Comprado ctx.key.remoteJid  /  message.Message.imageMessage.ImageMessage
   await provider.sendText(mobile + "@s.whatsapp.net", message);
     
@@ -143,7 +143,7 @@ const flowDesing = addKeyword(["1","2","3","4","5",
   [
     "🎨 Ahora, necesito algunos detalles para personalizar el diseño. Por favor,",
     "\n📝 Puedes hacer clic en el siguiente enlace para completar el formulario con la información que deseas en tu Tarjeta Digital:",
-    "👉 https://goo.su/vcAm1P",    
+    "👉 https://bot-whatsapp.netlify.app/",    
     "\n🛒 Puedes colocar 👉*1* para continuar con la compra."
   ],
   { capture: true },
