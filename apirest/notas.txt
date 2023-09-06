@@ -1,0 +1,226 @@
+/////////////////////////////////////////////////////////////////////////////NOTAS DEL BOT//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// aqui se usa el paquete de baileys para crear un bot de whatsapp
+// se crea un bot con el nombre de cartbot
+// se crea un flujo de conversación con el nombre de flowPrincipal, flowPrincipalRegistrado, flowDisenos, flowplanes, flowPreguntasFrecuentes, flowAgente, flowPedidos, flowCompra, flowDesing, flowplan1, flowplan2, flowplan3, flowPreguntasFrecuentes1 al 6
+// se utiliza el paquete de axios para hacer peticiones a la api
+// se crea una función para crear un post con el nombre de crearPost
+// se crea una función para buscar un cliente con el nombre de buscarCliente
+// se crea una función para actualizar un post con el nombre de actualizarPost
+// se crea una constante con el nombre de apiUrl que contiene la url de la api  http://localhost:4000/api/contactos
+// se utilizan certificados ssl para la seguridad de la api sirve para que la api sea segura
+//se utiliza de seguridad el paquete de helmet para la api  sirve para proteger la api de ataques de xss, clickjacking, sniffing, etc
+// se utiliza el paquete de cors para la seguridad de la api cors son para las peticiones que se hacen a la api que son permitidas
+// se utiliza el paquete de express para la api sirve para crear el servidor
+// se utiliza el paquete de morgan para la api morgan sirve para ver las peticiones que se hacen a la api
+// se utiliza el paquete de dotenv para la api sirve para las variables de entorno de la api
+// se utiliza express-rate-limit para la api sirve para limitar las peticiones que se hacen a la api
+// se utiliza express-validator para la api sirve para validar los datos que se envian a la api
+// seutiliza morgan y winston Configura los registros y agrega el middleware a tu aplicación: (middleware) significa que es una función que se ejecuta entre el proceso de recibir la petición y enviar la respuesta
+//wingston es un registrador de eventos para node.js
+//Dejo una carpeta que se llama "escritorio" esa la colocas en tu escritorio y comenzara a escribir y leer tu archivo json y en el log comensara a registrar lo que se haga durante el servidor ya que instales el paquete de winston y morgan 
+//para generar id unicos se utiliza el paquete de uuid 
+// para usar certificados HTTPS se utiliza el paquete de https para auto firmar los certificados se utiliza el paquete de selfsigned
+// uso fs para leer y escribir archivos
+// uso path para la ruta de los archivos
+
+// el bot sigue un flujo de conversación y cada paso que se da se guarda en la base de datos y se actualiza el paso de la conversación en la base de datos
+// se muestra el flujo de conversación en el log de la consola algunos pasos 
+// si la enta se realiza te manda un mensaje con la información del cliente y el comprobante de pago a un numero de whatsapp que se le asigna por default al bot
+// Si el cliente no compro pero si termino el flujo de registro a su nuevo mensaje el bot lo detecta y le habla por su nombre al ingresar la palabra menu o 0
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////PASO A PASO DE DESPLIEGUE DE BOT_VENTAS///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+npm init -y
+en package.js insertamos estos comandos
+ "scripts": {
+    "bot": "nodemon base-baileys-memory/app.js",
+    "server": "nodemon apirest/appRest.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+si te ayudan si no pasa al siguiente paso(npm run bot / npm run server)
+
+npm install express-rate-limit
+npm install morgan winston
+npm install uuid
+
+
+npm install express
+npm install axios nodemon jsonwebtoken
+cd apirest/
+node app.js
+
+//fallBack regresa al ultimo mensaje (su usa para validaciones)
+//endFlow finaliza el bot
+// flowDynamic manda mensaje con variables
+
+//////////////////////////////seguridad/////////////////////////////////////
+
+Límites de tasa:
+
+Instala express-rate-limit: npm install express-rate-limit
+Agrega el middleware a tu aplicación:
+
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100 // máximo 100 solicitudes por IP
+});
+
+app.use(limiter);
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+Validación de entrada:
+
+Instala express-validator: npm install express-validator
+Agrega el middleware a tu aplicación:
+
+const { body, validationResult } = require('express-validator');
+
+app.post('/ruta', [
+  body('campo').isEmail() // Ejemplo de validación de correo electrónico
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  // Continúa con el manejo de la solicitud
+});
+
+////////////// ////////////////////de pendiendo de la aplicación////////////////////////////////////////////
+Protección contra ataques CSRF y XSS:
+
+Instala csurf y helmet: npm install csurf helmet
+Agrega los middlewares a tu aplicación:
+
+const csrf = require('csurf');
+const helmet = require('helmet');
+
+app.use(csrf()); // Protección contra CSRF
+app.use(helmet()); // Diversas configuraciones de seguridad, incluida protección XSS
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Firewalls y WAF:
+
+Utiliza helmet como se mencionó anteriormente.
+Monitoreo y registros:
+
+Instala morgan y winston: npm install morgan winston
+Configura los registros y agrega el middleware a tu aplicación:
+
+const morgan = require('morgan');
+const winston = require('winston');
+
+// Definir la ruta relativa al archivo contactos.json
+const rutaCarpetaEscritorio = path.join(__dirname, '../../contacto');
+const archivoContactos = path.join(rutaCarpetaEscritorio, 'contactos.json');
+
+
+
+// Configuración de winston
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'tu-servidor' },
+  transports: [
+    new winston.transports.File({ maxsize: 5120000, maxFiles:5, filename: `${rutaCarpetaEscritorio}/contactos.log` })
+  ]
+});
+
+// Crear un flujo de escritura a un archivo de registros
+const logFileStream = fs.createWriteStream(`${rutaCarpetaEscritorio}/contactos.log`, { flags: 'a' });
+
+// Asignar el flujo de escritura a logger.stream
+logger.stream = {
+  write: (message) => {
+    logFileStream.write(message);
+  }
+};
+
+// Configurar morgan para utilizar logger.stream
+app.use(morgan('combined', { stream: logger.stream }));
+
+
+////////////////////////////////////Asegurar ID unicos////////////////////////////////////////////////////////////////////////
+
+Si deseas asegurarte de que los IDs sean únicos y no haya huecos, puedes utilizar una biblioteca que genere IDs únicos de manera confiable, como uuid en Node.js. Aquí tienes un ejemplo de cómo podrías usarlo:
+
+Primero, instala la biblioteca uuid en tu proyecto:
+
+npm install uuid
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+HTTPS:
+Genera un certificado SSL/TLS (puedes usar OpenSSL o generar uno con herramientas en línea).
+Configura Express para usar HTTPS. Ejemplo:
+
+1.- Generar un Certificado SSL/TLS:
+
+Puedes generar un certificado auto-firmado utilizando OpenSSL. Abre una terminal y ejecuta los siguientes comandos:
+
+openssl genpkey -algorithm RSA -out private-key.pem
+openssl req -new -key private-key.pem -out cert.csr
+openssl x509 -req -in cert.csr -signkey private-key.pem -out certificate.pem
+--------te van a pedir datos para generar el certificado llena la info--------
+
+
+2.- Esto creará los archivos private-key.pem (clave privada) y certificate.pem (certificado).
+Configurar Express para HTTPS:
+Aquí tienes un ejemplo de cómo configurar tu servidor Express para usar HTTPS:
+javascript
+
+const express = require('express');
+const https = require('https');
+const fs = require('fs');
+
+const app = express();
+
+// ... aquí configurar tus rutas y middleware ...
+
+// Ruta de prueba
+app.get('/', (req, res) => {
+  res.send('¡Hola desde HTTPS!');
+});
+
+// Cargar los certificados
+const privateKey = fs.readFileSync('private-key.pem', 'utf8');// Tu clave privada
+const certificate = fs.readFileSync('certificate.pem', 'utf8');// Tu certificado  tarda en generarse pero corre tu programa luego coloca " openssl x509 -req -in cert.csr -signkey private-key.pem -out certificate.pem "   y espera para que se genere y listo el cert.csr (no es, debe decir certificate.pem)
+const credentials = { key: privateKey, cert: certificate };
+
+
+// Crear un servidor HTTPS
+const httpsServer = https.createServer(credentials, app);
+
+// Escuchar en el puerto 4000 (o el puerto que prefieras)
+httpsServer.listen(4000, () => {
+  console.log('Servidor HTTPS escuchando en el puerto 4000');
+});
+
+
+3.- Asegúrate de que los archivos private-key.pem y certificate.pem estén en el mismo directorio que tu archivo de servidor Express. Puedes cambiar la ruta si es necesario.
+
+Iniciar el Servidor HTTPS:
+
+Ejecuta tu archivo de servidor en la terminal:
+
+node nombre-del-archivo.js
+
+Ahora tu servidor Express debería estar configurado para usar HTTPS. Puedes acceder a tu sitio utilizando https://localhost o el dominio correspondiente en tu navegador.
+
+Recuerda que en producción, en lugar de un certificado auto-firmado, debes obtener un certificado válido de una autoridad de certificación (CA) para evitar advertencias en los navegadores.
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+
