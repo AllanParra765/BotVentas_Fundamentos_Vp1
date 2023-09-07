@@ -19,3 +19,4 @@ done
 #Si estás ejecutando el script en una ventana de la consola o terminal, puedes presionar Ctrl + C. Esto enviará una señal de interrupción al proceso y lo detendrá.
 #Encontrar y Matar el Proceso:
 #Puedes encontrar y matar el proceso manualmente utilizando el comando ps (para listar procesos) y kill (para matar un proceso) en sistemas Unix/Linux o macOS. Esto requerirá conocer el ID del proceso (PID) de tu servidor Node.js. Aquí hay un ejemplo general:
+
