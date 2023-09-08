@@ -50,13 +50,13 @@ Node.js: Debes tener Node.js instalado en tu máquina. CartBot requiere Node.js 
 Para verificar la versión de Node.js que tienes instalada, ejecuta el siguiente comando en tu terminal:
 
 
-node --version
+`node --version`
 Si Node.js está correctamente instalado, verás la versión que tienes.
 
 NPM: Asegúrate de tener npm (Node Package Manager) instalado en tu sistema. Puedes verificar si tienes npm instalado ejecutando:
 
 
-npm --version
+`npm --version`
 Si no tienes npm, puedes instalarlo junto con Node.js desde el sitio web oficial mencionado anteriormente.
 
 Iniciar CartBot
@@ -65,16 +65,16 @@ Sigue estos pasos para iniciar el bot:
 Clona este repositorio en tu máquina local.
 
 
-git clone <https://github.com/AllanParra765/BotVentas_Fundamentos_Vp1.git>
+`git clone <https://github.com/AllanParra765/BotVentas_Fundamentos_Vp1.git>`
 Ve al directorio donde clonaste el repositorio.
 
 
-cd base-baileys-memory/
+`cd base-baileys-memory/`
 
 puedes iniciar el bot ejecutando:
 
 
-npm start
+`npm start`
 
 Al ejecutar este comando, CartBot comenzará a funcionar y se ejecutará en el puerto 3000.
 
